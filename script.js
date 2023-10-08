@@ -48,7 +48,7 @@ function checkPageActivity() {
 
 	if (inactiveTime > 1000) {
 		alertSwitchTabs(
-			" from time subtraction detect (although it detects when you are inactive / doing nothing so prob not realiable)"
+			" from time subtraction detect (although it detects when you are inactive / doing nothing: not reliable)"
 		);
 	}
 
@@ -61,4 +61,4 @@ document.addEventListener("click", handleActivity);
 document.addEventListener("keydown", handleActivity);
 
 // Start checking for page activity
-// checkPageActivity();
+checkPageActivity();
