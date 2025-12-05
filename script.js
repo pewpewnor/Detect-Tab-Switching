@@ -1,3 +1,5 @@
+let enableCheckActivity = false;
+
 if (typeof document.hidden !== "undefined") {
 	console.log("API enabled");
 	document.getElementById("info").innerHTML +=
@@ -61,4 +63,6 @@ document.addEventListener("click", handleActivity);
 document.addEventListener("keydown", handleActivity);
 
 // Start checking for page activity
-checkPageActivity();
+if (enableCheckActivity) {
+	checkPageActivity();
+}
