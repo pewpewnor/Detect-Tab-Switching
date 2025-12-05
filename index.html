@@ -1,15 +1,89 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Detect Tab Switching</title>
-	</head>
-	<body>
-		<h1 id="title">Try switching your tabs</h1>
-		<p id="info"></p>
-		<pre id="txt"></pre>
-		<script src="script.js"></script>
-	</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Detect Tab Switching</title>
+    </head>
+    <body>
+        <script>
+            let enableCheckVisibilityAPI = true;
+            let enableCheckFocus = true;
+            let enableCheckBlur = true;
+            let enableCheckActivity = false;
+        </script>
+
+        <h1 id="title">Try switching your tabs</h1>
+        <p id="info"></p>
+        <pre id="txt"></pre>
+
+        <script>
+            if (typeof document.hidden !== "undefined") {
+                console.log("API enabled");
+                document.getElementById("info").innerHTML +=
+                    "Page visibility API seems to be enabled (this could be untrue)";
+            } else {
+                console.log("API disabled");
+                document.getElementById("info").innerHTML +=
+                    "Page visibility API seems to be disabled (still could be detected by other methods)";
+            }
+
+            function alertSwitchTabs(msg) {
+                console.log("You switched tabs" + msg);
+                document.getElementById("txt").innerHTML +=
+                    "You switched tabs" + msg + "\n";
+                document.getElementById("title").innerHTML =
+                    "You have been caught cheating";
+                document.getElementById("title").style.color = "#ff0000";
+            }
+
+            if (enableCheckVisibilityAPI) {
+                document.addEventListener("visibilitychange", () => {
+                    alertSwitchTabs(" from page visibility API detect");
+                });
+            }
+
+            if (enableCheckFocus) {
+                let firstTime = true;
+                window.addEventListener("focus", () => {
+                    if (firstTime) {
+                        firstTime = false;
+                    } else {
+                        alertSwitchTabs(" from focus detect");
+                    }
+                });
+            }
+
+            if (enableCheckBlur) {
+                window.addEventListener("blur", () => {
+                    alertSwitchTabs(" from blur detect");
+                });
+            }
+
+            let lastActivityTime = Date.now();
+
+            function handleActivity() {
+                lastActivityTime = Date.now();
+            }
+
+            function checkPageActivity() {
+                const currentTime = Date.now();
+                const inactiveTime = currentTime - lastActivityTime;
+
+                if (inactiveTime > 1000) {
+                    alertSwitchTabs(
+                        " from time subtraction detect (although it detects when you are inactive / doing nothing: not reliable)",
+                    );
+                }
+            }
+
+            document.addEventListener("mousemove", handleActivity);
+            document.addEventListener("click", handleActivity);
+            document.addEventListener("keydown", handleActivity);
+            while (enableCheckActivity) {
+                setTimeout(checkPageActivity, 1000);
+            }
+        </script>
+    </body>
 </html>
